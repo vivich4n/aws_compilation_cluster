@@ -1,0 +1,34 @@
+{
+    "variables" : {
+        "provs"  : "provisioners"
+    },
+    "builders" : [
+    {
+        "type" : "amazon-ebs",
+        "profile" : "your-profile",
+        "region": "us-east-1",
+        "source_ami_filter": {
+            "filters" : {
+                "virtualization-type":"hvm",
+                "name":"ubuntu/images/*ubuntu-bionic-18.04-amd64-server-*",
+                "root-device-type" : "ebs"
+            },
+            "owners": ["099720109477"],
+            "most_recent": true
+        },
+        "instance_type": "t2.micro",
+        "ami_name": "vault_image",
+        "ssh_username": "ubuntu",
+	"tags":{"Name":"compiler-image"}
+    }],
+    "provisioners" : [
+    {
+      "type" : "shell",
+      "inline": [
+        "sleep 30",
+        "sudo apt update",
+        "sudo apt install -y ansible",
+        "sudo apt install -y build-essential libncurses-dev bison flex libssl-dev libelf-dev distcc"
+       ]
+    }]
+}
